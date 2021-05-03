@@ -7,8 +7,6 @@ import datetime
 PROMISED_DOWN = 150
 PROMISED_UP = 10
 CHROME_DRIVER_PATH = "/Development/chromedriver"
-TWITTER_EMAIL = "test.ithulin@yahoo.com"
-TWITTER_PASSWORD = "E7354qb7hfv4T4v"
 
 
 class InternetSPeedTwitterBot:
