@@ -1,7 +1,12 @@
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 from selenium import webdriver
 import time
 import datetime
+
+USERNAME = "ithulin"
+PASSWORD = "thulin4568"
 
 class DataScraper:
     def __init__(self) -> None:
@@ -14,7 +19,32 @@ class DataScraper:
     def get_sales_efficiency(self):
         
         self.driver.get("https://ge25a.leadperfection.com/")
-        time.sleep(50)
+        time.sleep(3)
+
+        # Login
+        self.driver.find_element(By.ID, "txtUserName").send_keys(USERNAME)
+        self.driver.find_element(By.ID, "txtPassword").send_keys(PASSWORD)
+        self.driver.find_element(By.ID, "btnLogin").click()
+        time.sleep(2)
+
+        #self.driver.find_element(By.CLASS_NAME, "menu-toggler").click()
+        self.driver.get('https://ge25a.leadperfection.com/ReportCtrl.html?BC=Reports|Report%20Generator')
+
+        # Create group and name drop down
+        time.sleep(2)
+        self.group_element = self.driver.find_element(By.ID, 'ReportGroup')
+        self.name_element = self.driver.find_element(By.ID, "ReportName")
+        self.group = Select(self.group_element)
+        self.name = Select(self.name_element)
+
+        # Select Sales efficiency by rep
+        self.group.select_by_index(6)
+        time.sleep(1)
+        self.name.select_by_index(11)
+        time.sleep(1)
+
+        # Fill in data to pull report for the previous week.
+        time.sleep(60)
         print("Time's up")
         self.driver.close()
 
