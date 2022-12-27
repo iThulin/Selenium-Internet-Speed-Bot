@@ -2,8 +2,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium import webdriver
+from datetime import date, timedelta
 import time
-import datetime
 
 USERNAME = "ithulin"
 PASSWORD = "thulin4568"
@@ -14,7 +14,30 @@ class DataScraper:
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option("excludeSwitches", ["enable-logging"])
         self.driver = webdriver.Chrome(options=self.options, service=self.service)
-        self.now = datetime.datetime.now()
+        self.today = None
+        self.start_date = None
+        self.end_date = None
+
+        self.get_date()
+        self.set_date_data()
+
+    def get_date(self):
+        self.date = date.today()
+        #print(self.date)
+        self.today = self.date.strftime("%d%m%Y")
+        #print(self.today)
+
+    def set_date_data(self):
+        self.start_date = self.last_day('saturday')
+        self.end_date = self.last_day('sunday')
+
+    def last_day(self, day_name):
+        today = date.today()
+        days_list = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+        target_day = days_list.index(day_name)
+        delta_day = target_day - today.isoweekday()
+        if delta_day >= 0: delta_day -= 7 #go back 7 days
+        return (today + timedelta(days=delta_day)).strftime('%d%m%Y')
 
     def get_sales_efficiency(self):
         
@@ -44,6 +67,14 @@ class DataScraper:
         time.sleep(1)
 
         # Fill in data to pull report for the previous week.
+        self.get_date()
+        self.driver.find_element(By.ID, 'TextBox1').send_keys(self.start_date)
+        time.sleep(1)
+        self.driver.find_element(By.ID, 'TextBox2').send_keys(self.end_date)
+
+
+
+        # Timer for window to close in case it is left open.
         time.sleep(60)
         print("Time's up")
         self.driver.close()
@@ -51,3 +82,6 @@ class DataScraper:
 
 scraper = DataScraper()
 scraper.get_sales_efficiency()
+#scraper.get_date()
+#scraper.set_date_data()
+#print(scraper.start_date)
