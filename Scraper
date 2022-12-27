@@ -1,0 +1,23 @@
+from selenium.webdriver.chrome.service import Service
+from selenium import webdriver
+import time
+import datetime
+
+class DataScraper:
+    def __init__(self) -> None:
+        self.service = Service(executable_path="/chrome driver")
+        self.options = webdriver.ChromeOptions()
+        self.options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        self.driver = webdriver.Chrome(options=self.options, service=self.service)
+        self.now = datetime.datetime.now()
+
+    def get_sales_efficiency(self):
+        
+        self.driver.get("https://ge25a.leadperfection.com/")
+        time.sleep(50)
+        print("Time's up")
+        self.driver.close()
+
+
+scraper = DataScraper()
+scraper.get_sales_efficiency()
