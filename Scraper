@@ -96,11 +96,22 @@ class DataScraper:
         time.sleep(2)
 
         # Iterate through the services to manually close entry that matches the service ticket number
-        ticket_element = self.driver.find_element(By.ID, str(current_ticket))
-        #print(self.driver.find_element(By.ID, str(current_ticket)))
-        #print(ticket_element.get_attribute())
+        ticket_element = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/section/div[2]/div[7]/div/div/table/tbody/tr[1]/td[1]/a/i")
         ticket_element.click()
+        time.sleep(2)
 
+        # Set the status tag to complete
+        self.status_tag = self.driver.find_element(By.ID, "jsv_svs_id")
+        self.status = Select(self.status_tag)
+        self.status.select_by_index(4)
+        time.sleep(1)
+
+        # Close the popup window
+        self.driver.find_element(By.ID, "servicemodalsave").click()
+        time.sleep(1)
+
+        # Remove service ticket id from the list
+        self.service_tickets.pop(0)
 
     def remove_service(self):
         
@@ -113,16 +124,16 @@ class DataScraper:
         self.driver.find_element(By.ID, "btnLogin").click()
         time.sleep(2)
 
-        #self.driver.find_element(By.CLASS_NAME, "menu-toggler").click()
-        self.driver.get('https://ge25a.leadperfection.com/JobFilters.html?BC=Production|Job%20Search')
+        for i in range(0, len(self.driver.service_tickets)):
+            #self.driver.find_element(By.CLASS_NAME, "menu-toggler").click()
+            self.driver.get('https://ge25a.leadperfection.com/JobFilters.html?BC=Production|Job%20Search')
 
-        # Iterate through the list of open tickets, call interact_with_ticket, and close the open ticket
-        self.interact_with_ticket()
-
-
+            # Iterate through the list of open tickets, call interact_with_ticket, and close the open ticket
+            print(self.service_tickets)
+            self.interact_with_ticket()
 
         # Timer for window to close in case it is left open.
-        time.sleep(60)
+        time.sleep(30)
         print("Time's up")
         self.driver.close()
 
