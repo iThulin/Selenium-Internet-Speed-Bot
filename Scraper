@@ -113,7 +113,7 @@ class DataScraper:
         # Remove service ticket id from the list
         self.service_tickets.pop(0)
 
-    def remove_service(self):
+    def login(self):
         
         self.driver.get("https://ge25a.leadperfection.com/")
         time.sleep(3)
@@ -122,24 +122,21 @@ class DataScraper:
         self.driver.find_element(By.ID, "txtUserName").send_keys(USERNAME)
         self.driver.find_element(By.ID, "txtPassword").send_keys(PASSWORD)
         self.driver.find_element(By.ID, "btnLogin").click()
-        time.sleep(2)
-
-        for i in range(0, len(self.driver.service_tickets)):
-            #self.driver.find_element(By.CLASS_NAME, "menu-toggler").click()
-            self.driver.get('https://ge25a.leadperfection.com/JobFilters.html?BC=Production|Job%20Search')
-
-            # Iterate through the list of open tickets, call interact_with_ticket, and close the open ticket
-            print(self.service_tickets)
-            self.interact_with_ticket()
-
-        # Timer for window to close in case it is left open.
-        time.sleep(30)
-        print("Time's up")
-        self.driver.close()
 
 scraper = DataScraper()
-#scraper.get_sales_efficiency()
-scraper.remove_service()
-#scraper.get_date()
-#scraper.set_date_data()
-#print(scraper.start_date)
+#print(scraper.service_tickets)
+scraper.login()
+
+for i in range(0, len(scraper.service_tickets)):
+    #self.driver.find_element(By.CLASS_NAME, "menu-toggler").click()
+    scraper.driver.get('https://ge25a.leadperfection.com/JobFilters.html?BC=Production|Job%20Search')
+    time.sleep(3)
+
+    # Iterate through the list of open tickets, call interact_with_ticket, and close the open ticket
+    #print(self.service_tickets)
+    scraper.interact_with_ticket()
+
+
+time.sleep(15)
+print("Time's up")
+scraper.driver.close()
